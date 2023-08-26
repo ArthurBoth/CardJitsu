@@ -9,6 +9,13 @@ public class Card implements Comparable<Card>{
     public final int number;
     public final COLOR color;
     public final EFFECT powerEffect;
+    
+    public Card(ELEMENT element, int number, COLOR color) {
+        this.element = element;
+        this.number = number;
+        this.color = color;
+        this.powerEffect = EFFECT.NO_EFFECT;
+    }
 
     public Card(ELEMENT element, int number, COLOR color, EFFECT powerEffect) {
         this.element = element;

@@ -14,12 +14,11 @@ public class Player {
 
     public void fillDeck(List<Card> deck) {
         this.deck = new LinkedList<>(deck);
-        shuffleDeck();
     }
 
     public void newHand() {
         for (int i=0;i<5;i++) {
-            deck.add(hand[i]);
+            if (hand[i] != null) deck.add(hand[i]);
             hand[i] = deck.poll();
         }
         shuffleDeck();
