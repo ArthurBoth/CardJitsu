@@ -49,3 +49,24 @@ In case of both cards having the same element and the same number, then it's a t
         - Has three variations *Fire*,*Water* and *Snow*.
         - Prevent's the opponent from playing any card of a specific element, for the next battle only.
         - If all cards in a player's hand are blocked, they put their hand into the bottom of their deck, draw a new one and the **Element Block** effect expires.
+
+# Updates
+## Version 1
+August 27th, 2023
+This is the first version of the game, it includes all basic functionalities.
+### Features
+- Both the human player and the Bot player have different decks.
+- The player can play a card, win and loose.
+- When played, cards go to the correct place (either the score or the bottom of the deck)
+- Both players' decks get shuffled frequently
+
+### Known Issues
+- Currently, decks are made with randomly generated cards, this can lead to awkward scenarios where the player only has cards of one element.
+- Currently, when a player plays a card and wins a battle, the card goes both to the bottom of their deck and to their score
+- Power Cards have not been implemented yet.
+
+### Future Plans
+These are things I intend on implementing in the future.
+- Power Card Effects. These will likely come in waves. 
+- Pre-made cards and decks. I plan on making *.csv* files with cards and decks, in order to make the game more balanced.
+- Making the winner's score appear at the end so the player knows how/why that player won.
