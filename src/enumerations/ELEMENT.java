@@ -1,7 +1,10 @@
 package enumerations;
 
 public enum ELEMENT{
-    FIRE,WATER,SNOW;
+    FIRE("Fire"),WATER("Water"),SNOW("Snow");
+
+    private ELEMENT(String name){
+    }
 
     public int elementBattle(ELEMENT other){
         if (this == other) return 0;

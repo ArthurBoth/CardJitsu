@@ -1,6 +1,7 @@
 package player;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import enumerations.*;
 
@@ -100,5 +101,45 @@ public class Score {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        HashMap<COLOR,Integer> fireColors = new HashMap<>();
+        HashMap<COLOR,Integer> waterColors = new HashMap<>();
+        HashMap<COLOR,Integer> snowColors = new HashMap<>();
+         
+        for(Card c : playerScore){
+            if(c.element == ELEMENT.FIRE){
+                fireColors.merge(c.color, 1, Integer::sum);
+            }
+            else if(c.element == ELEMENT.WATER){
+                waterColors.merge(c.color, 1, Integer::sum);
+            }
+            else{
+                snowColors.merge(c.color, 1, Integer::sum);
+            }
+        }
+
+
+        StringBuilder str = new StringBuilder("Fire cards:\n");
+        for (Entry<COLOR, Integer> entry : fireColors.entrySet()) {
+            str.append("\t" + entry.getValue() + " " + entry.getKey().name() + " fire card");
+            if (entry.getValue() != 1) str.append("s");
+            str.append(".\n");
+        }
+        str.append("Water cards:\n");
+        for (Entry<COLOR, Integer> entry : waterColors.entrySet()) {
+            str.append("\t" + entry.getValue() + " " + entry.getKey().name() + " water card");
+            if (entry.getValue() != 1) str.append("s");
+            str.append(".\n");
+        }
+        str.append("Snow cards:\n");
+        for (Entry<COLOR, Integer> entry : snowColors.entrySet()) {
+            str.append("\t" + entry.getValue() + " " + entry.getKey().name() + " snow card");
+            if (entry.getValue() != 1) str.append("s");
+            str.append(".\n");
+        }
+        return str.toString();
     }
 }
