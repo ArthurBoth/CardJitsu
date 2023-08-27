@@ -124,19 +124,19 @@ public class Score {
 
         StringBuilder str = new StringBuilder("Fire cards:\n");
         for (Entry<COLOR, Integer> entry : fireColors.entrySet()) {
-            str.append("\t" + entry.getValue() + " " + entry.getKey().name() + " fire card");
+            str.append("\t" + entry.getValue() + " " + entry.getKey().toString() + " fire card");
             if (entry.getValue() != 1) str.append("s");
             str.append(".\n");
         }
         str.append("Water cards:\n");
         for (Entry<COLOR, Integer> entry : waterColors.entrySet()) {
-            str.append("\t" + entry.getValue() + " " + entry.getKey().name() + " water card");
+            str.append("\t" + entry.getValue() + " " + entry.getKey().toString() + " water card");
             if (entry.getValue() != 1) str.append("s");
             str.append(".\n");
         }
         str.append("Snow cards:\n");
         for (Entry<COLOR, Integer> entry : snowColors.entrySet()) {
-            str.append("\t" + entry.getValue() + " " + entry.getKey().name() + " snow card");
+            str.append("\t" + entry.getValue() + " " + entry.getKey().toString() + " snow card");
             if (entry.getValue() != 1) str.append("s");
             str.append(".\n");
         }

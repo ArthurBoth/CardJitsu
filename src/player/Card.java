@@ -37,6 +37,6 @@ public class Card implements Comparable<Card>{
 
     @Override
     public String toString(){
-        return "A " + element.name() + " " + number + ", " + color.name() + "colored card.";
+        return "A " + element.toString() + " " + number + ", " + color.toString() + " colored card.";
     }
 }

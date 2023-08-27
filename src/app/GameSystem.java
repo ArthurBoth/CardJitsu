@@ -1,102 +1,111 @@
 package app;
-import enumerations.*;
 import player.*;
 import java.util.*;
 
 public class GameSystem {
-    private Random random = new Random();
     
     private Player humanPlayer;
-    private Player botPlayer;
-    private EFFECT[] powerCardEffectField;
-    private EFFECT[] powerCardEffectPlayer;
-    private EFFECT[] powerCardEffectBot;
+    private PlayerBot botPlayer;
     private Battle judge;
 
     public GameSystem(){
         this.humanPlayer = new Player();
-        this.botPlayer = new Player();
-        this.powerCardEffectField = new EFFECT[2];
-        this.powerCardEffectPlayer = new EFFECT[2];
-        this.powerCardEffectBot = new EFFECT[2];
+        this.botPlayer = new PlayerBot();
         this.judge = new Battle();
     }
 
-    //TODO
     public void play(){
         setup();
+        while(finishGame()){
+            menu();
+            int input = input();
+            cardBattle(input);
+        }
     }
 
     private void setup(){
-        LinkedList<Card> deckPlayer1 = new LinkedList<>();
-        LinkedList<Card> deckPlayer2 = new LinkedList<>();
-
-        for (int i=0;i<20;i++){
-            deckPlayer1.add(makeCard());
-            deckPlayer2.add(makeCard());
-        }
-
-        humanPlayer.fillDeck(deckPlayer1);
-        botPlayer.fillDeck(deckPlayer2);
+        humanPlayer.generateDeck();
+        botPlayer.generateDeck();
 
         humanPlayer.newHand();
         botPlayer.newHand();
     }
 
-    /* TODO add option to make power cards */
-    private Card makeCard(){
-        int randomElement = random.nextInt(2);
-        int randomNumber = random.nextInt(2,8);
-        int randomColor = random.nextInt(5);
-
-        ELEMENT element;
-        COLOR color;
-
-        switch(randomElement){
-            case 0:
-                element = ELEMENT.FIRE;
-                break;
-            case 1:
-                element = ELEMENT.WATER;
-                break;
-            default:
-                element = ELEMENT.SNOW;
-                break;
-        }
-
-        switch(randomColor){
-            case 0:
-                color = COLOR.BLUE;
-                break;
-            case 1:
-                color = COLOR.GREEN;
-                break;
-            case 2:
-                color = COLOR.ORANGE;
-                break;
-            case 3:
-                color = COLOR.PURPLE;
-                break;
-            case 4:
-                color = COLOR.RED;
-                break;
-            default:
-                color = COLOR.YELLOW;
-                break;
-        }
-
-        return new Card(element,randomNumber,color);
+    private void menu(){
+        System.out.println("Opponent's score:");
+        System.out.println(botPlayer.getScore().toString());
+        System.out.println("------------------------------------------------------------");
+        System.out.println("Your score:");
+        System.out.println(humanPlayer.getScore().toString());
+        System.out.print("\n");
+        System.out.println("Your hand:");
+        System.out.println("[1] " + humanPlayer.getHand()[0].toString());
+        System.out.println("[2] " + humanPlayer.getHand()[1].toString());
+        System.out.println("[3] " + humanPlayer.getHand()[2].toString());
+        System.out.println("[4] " + humanPlayer.getHand()[3].toString());
+        System.out.println("[5] " + humanPlayer.getHand()[4].toString());
+        System.out.print("Choose a card to play: ");
     }
 
-    //TODO
-    private void menu(){}
+    private int input(){
+        Scanner scanner = new Scanner(System.in);
+        boolean flag = true;
+        int input = -1;
 
-    //TODO
-    private void drawPhase(){}
+        while(flag){
+            flag = false;
+            try {
+                input = scanner.nextInt();
+                if ((input < 1) || (input > 5)){
+                    throw new InputMismatchException();
+                }
+            } catch (Exception e) {
+                System.out.print("Invalid input, try again: ");
+                    flag = true;
+            }
+        }
+        
+        return input;
+    }
+    
+    private void cardBattle(int playerInput){
+        Card playerCard = humanPlayer.playCard(playerInput-1);
+        Card botCard = botPlayer.playCard();
+        
+        System.out.println("\n");
+        System.out.println("-------------------------------------------------------------------------------");
 
-    //TODO
-    private void cardBattle(){}
+        System.out.println("You played " + playerCard.toString().toLowerCase());
+        System.out.println("Your opponent played " + botCard.toString().toLowerCase());
 
-    //TODO
-    private void finishGame(){}
+        int battleResult = judge.battle(playerCard, botCard);
+
+        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("\n");
+
+        switch(battleResult){
+            case 1:
+                System.out.println("You won this round!");
+                humanPlayer.getScore().addToScore(playerCard);
+                break;
+            case -1:
+                System.out.println("You lost this round!");
+                botPlayer.getScore().addToScore(botCard);
+                break;
+            default:
+                System.out.println("Draw!");
+                break;
+        }
+    }
+
+    private boolean finishGame(){
+        if (humanPlayer.getScore().hasWon()){
+            System.out.println("You won!");
+            return false;
+        } else if (botPlayer.getScore().hasWon()){
+            System.out.println("You lost!");
+            return false;
+        }
+        return true;
+    }
 }

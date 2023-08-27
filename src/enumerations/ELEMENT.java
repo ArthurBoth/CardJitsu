@@ -1,10 +1,7 @@
 package enumerations;
 
 public enum ELEMENT{
-    FIRE("Fire"),WATER("Water"),SNOW("Snow");
-
-    private ELEMENT(String name){
-    }
+    FIRE,WATER,SNOW;
 
     public int elementBattle(ELEMENT other){
         if (this == other) return 0;
@@ -18,5 +15,10 @@ public enum ELEMENT{
             default:
                 return 0;
         }
+    }
+
+    @Override
+    public String toString(){
+        return this.name().charAt(0) + this.name().substring(1).toLowerCase();
     }
 }
