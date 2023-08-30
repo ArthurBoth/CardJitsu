@@ -27,10 +27,12 @@ public class Player {
 
     public Card playCard(int cardIndex){
         Card playedCard = hand[cardIndex];
-        deck.add(playedCard);
         hand[cardIndex] = deck.poll();
-        shuffleDeck();
         return playedCard;
+    }
+
+    public void discardCard(Card card){
+        deck.add(card);
     }
 
     private void shuffleDeck() {

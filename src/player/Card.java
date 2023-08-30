@@ -1,23 +1,23 @@
 package player;
 
 import enumerations.COLOR;
-import enumerations.EFFECT;
+import enumerations.EFFECTTYPE;
 import enumerations.ELEMENT;
 
 public class Card implements Comparable<Card>{
     public final ELEMENT element;
     public final int number;
     public final COLOR color;
-    public final EFFECT powerEffect;
+    public final EFFECTTYPE powerEffect;
     
     public Card(ELEMENT element, int number, COLOR color) {
         this.element = element;
         this.number = number;
         this.color = color;
-        this.powerEffect = EFFECT.NO_EFFECT;
+        this.powerEffect = EFFECTTYPE.NO_EFFECT;
     }
 
-    public Card(ELEMENT element, int number, COLOR color, EFFECT powerEffect) {
+    public Card(ELEMENT element, int number, COLOR color, EFFECTTYPE powerEffect) {
         this.element = element;
         this.number = number;
         this.color = color;

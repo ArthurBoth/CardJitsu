@@ -87,10 +87,12 @@ public class GameSystem {
             case 1:
                 System.out.println("You won this round!");
                 humanPlayer.getScore().addToScore(playerCard);
+                botPlayer.discardCard(botCard);
                 break;
             case -1:
                 System.out.println("You lost this round!");
                 botPlayer.getScore().addToScore(botCard);
+                humanPlayer.discardCard(playerCard);
                 break;
             default:
                 System.out.println("Draw!");
