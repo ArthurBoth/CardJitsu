@@ -30,4 +30,8 @@ public class PowerEffect {
     public static boolean applyThisTurn(EFFECTTYPE e){
         return currentTurnEffects.contains(e);
     }
+
+    public int getPlayerID(){
+        return player;
+    }
 }
