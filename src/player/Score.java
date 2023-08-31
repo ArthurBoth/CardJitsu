@@ -16,7 +16,7 @@ public class Score {
         playerScore.add(card);
     }
 
-    public void removeColorFromScore(COLOR color) {
+    public void removeFromScore(COLOR color) {
         for (Card c : playerScore) {
             if (c.color == color) {
                 playerScore.remove(c);
@@ -25,7 +25,7 @@ public class Score {
         }
     }
 
-    public void removeElementFromScore(ELEMENT element) {
+    public void removeFromScore(ELEMENT element) {
         for (Card c : playerScore) {
             if (c.element == element) {
                 playerScore.remove(c);

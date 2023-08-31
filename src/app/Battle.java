@@ -5,45 +5,50 @@ import enumerations.*;
 import java.util.*;
 
 public class Battle {
+    private Queue<PowerEffect> postBattleEffects = new LinkedList<>();
+
     private Queue<PowerEffect> currentTurnEffects = new LinkedList<>();
     private Queue<PowerEffect> nextTurnEffects = new LinkedList<>();
     private boolean reverseBattle;
     private Card player1Card;
     private Card player2Card;
-
-     /*
-     * TODO add fire removal effect
-     * TODO add water removal effect
-     * TODO add snow removal effect
-     * TODO add blue removal effect
-     * TODO add red removal effect
-     * TODO add green removal effect
-     * TODO add yellow removal effect
-     * TODO add orange removal effect
-     * TODO add purple removal effect
-     * TODO add block fire effect
-     * TODO add block water effect
-     * TODO add block snow effect
-     */
+    private int battleWinnerID;
 
     /*
      * Returns a positive number if player1 wins, negative if player2 wins, 0 if they draw
      */
     public int battle(Card p1Card,Card p2Card){
-        int returnValue;
-
+        int battleResult;
         this.player1Card = p1Card;
         this.player2Card = p2Card;
 
         getPowerEffects();
         applyInBattleEffects();
-        returnValue = cardBattle();
-        endBattle();
+        battleResult = cardBattle();
+        endBattle(battleResult);
 
+        return battleResult;
+    }
+
+    public Queue<PowerEffect> getPostBattleEffects(){
+        Queue<PowerEffect> returnValue = new LinkedList<>();
+        PowerEffect power;
+
+        while (!postBattleEffects.isEmpty()){
+            power = postBattleEffects.poll();
+
+            if (power.getPlayerID() == battleWinnerID)
+                returnValue.add(power);
+        }
         return returnValue;
     }
 
-    private void endBattle(){
+    private void endBattle(int battleResult){
+        if (battleResult > 0){
+            battleWinnerID = 1;
+        } else if (battleResult < 0){
+            battleWinnerID = 2;
+        }
         currentTurnEffects = nextTurnEffects;
         nextTurnEffects = new LinkedList<>();
         reverseBattle = false;
@@ -74,19 +79,19 @@ public class Battle {
     }
 
     private void getPowerEffects(){
-        if (player1Card.powerEffect == EFFECTTYPE.NO_EFFECT){
-            if (PowerEffect.applyThisTurn(player1Card.powerEffect)){
-                currentTurnEffects.add(new PowerEffect(player1Card.powerEffect, 0));
+        if (player1Card.powerEffect != EFFECTTYPE.NO_EFFECT){
+            if (PowerEffect.applyNextTurn(player1Card.powerEffect)){
+                nextTurnEffects.add(new PowerEffect(player1Card.powerEffect, 1));
             } else {
-                nextTurnEffects.add(new PowerEffect(player1Card.powerEffect, 0));
+                postBattleEffects.add(new PowerEffect(player1Card.powerEffect, 1));
             }
         }
         
-        if (player2Card.powerEffect == EFFECTTYPE.NO_EFFECT){
-            if (PowerEffect.applyThisTurn(player2Card.powerEffect)){
-                currentTurnEffects.add(new PowerEffect(player2Card.powerEffect, 1));
+        if (player2Card.powerEffect != EFFECTTYPE.NO_EFFECT){
+            if (PowerEffect.applyNextTurn(player2Card.powerEffect)){
+                nextTurnEffects.add(new PowerEffect(player2Card.powerEffect, 2));
             } else {
-                nextTurnEffects.add(new PowerEffect(player2Card.powerEffect, 1));
+                postBattleEffects.add(new PowerEffect(player2Card.powerEffect, 2));
             }
         }
     }
@@ -99,10 +104,10 @@ public class Battle {
                     reverseBattle = true;
                     break;
                 case NUMBER_MODIFIER_SELF:
-                    applyNumberModifier(power);
+                    applyModifier(power,2);
                     break;
                 case NUMBER_MODIFIER_OTHER:
-                    applyNumberModifier(power);
+                    applyModifier(power,-2);
                     break;
                 case CHANGE_FIRE_TO_SNOW:
                     applyElementChange(ELEMENT.FIRE);
@@ -114,36 +119,32 @@ public class Battle {
                     applyElementChange(ELEMENT.SNOW);
                     break;
                 default:
-                    break;
+                    postBattleEffects.add(power);
             }
         }
     }
 
-    private void applyNumberModifier(PowerEffect effect){
-        switch (effect.effect){
-            case NUMBER_MODIFIER_SELF:
-                if (effect.getPlayerID() == 0){
-                    player1Card = new Card(
-                    player1Card.element, player1Card.number+2, player1Card.color, player1Card.powerEffect
-                    );
-                } else {
-                    player2Card = new Card(
-                    player2Card.element, player2Card.number+2, player2Card.color, player2Card.powerEffect
-                    );
-                }
-                break;
-                case NUMBER_MODIFIER_OTHER:
-                    if (effect.getPlayerID() == 0){
-                        player2Card = new Card(
-                            player2Card.element, player2Card.number-2, player2Card.color, player2Card.powerEffect
-                        );
-                    } else {
-                        player1Card = new Card(
-                            player1Card.element, player1Card.number-2, player1Card.color, player1Card.powerEffect
-                        );
-                    }
-                break;
-            default:
+    private void applyModifier(PowerEffect effect, int numberModifier){
+        if (numberModifier > 0){
+            if (effect.getPlayerID() == 1){
+                player1Card = new Card(
+                player1Card.element, player1Card.number + numberModifier, player1Card.color, player1Card.powerEffect
+                );
+            } else {
+                player2Card = new Card(
+                player2Card.element, player2Card.number + numberModifier, player2Card.color, player2Card.powerEffect
+                );
+            }
+        } else {
+            if (effect.getPlayerID() == 1){
+                player2Card = new Card(
+                player2Card.element, player2Card.number + numberModifier, player2Card.color, player2Card.powerEffect
+                );
+            } else {
+                player1Card = new Card(
+                player1Card.element, player1Card.number + numberModifier, player1Card.color, player1Card.powerEffect
+                );
+            }
         }
     }
 

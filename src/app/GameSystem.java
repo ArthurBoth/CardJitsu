@@ -1,12 +1,15 @@
 package app;
+
 import player.*;
 import java.util.*;
+import enumerations.*;
 
 public class GameSystem {
     
     private Player humanPlayer;
     private PlayerBot botPlayer;
     private Battle judge;
+    private ELEMENT elementBlock; // TODO implement element block
 
     public GameSystem(){
         this.humanPlayer = new Player();
@@ -16,7 +19,7 @@ public class GameSystem {
 
     public void play(){
         setup();
-        while(finishGame()){
+        while(!finishGame()){
             menu();
             int input = input();
             cardBattle(input);
@@ -69,6 +72,12 @@ public class GameSystem {
     }
     
     private void cardBattle(int playerInput){
+     /*
+     * TODO add fire block effect
+     * TODO add water block effect
+     * TODO add snow block effect
+     */
+        int battleResult;
         Card playerCard = humanPlayer.playCard(playerInput-1);
         Card botCard = botPlayer.playCard();
         
@@ -78,7 +87,8 @@ public class GameSystem {
         System.out.println("You played " + playerCard.toString().toLowerCase());
         System.out.println("Your opponent played " + botCard.toString().toLowerCase());
 
-        int battleResult = judge.battle(playerCard, botCard);
+        battleResult = judge.battle(playerCard, botCard);
+        applyEffects(judge.getPostBattleEffects());
 
         System.out.println("-------------------------------------------------------------------------------");
         System.out.println("\n");
@@ -100,14 +110,79 @@ public class GameSystem {
         }
     }
 
+    private void applyEffects(Queue<PowerEffect> effects){
+        PowerEffect power;
+        while (!effects.isEmpty()){
+            power = effects.poll();
+            switch (power.effect){
+                case BLOCK_FIRE:
+                    applyElementBlock(ELEMENT.FIRE);
+                    break;
+                case BLOCK_WATER:
+                    applyElementBlock(ELEMENT.WATER);
+                    break;
+                case BLOCK_SNOW:
+                    applyElementBlock(ELEMENT.SNOW);
+                    break;
+                default:
+                    applyScoreRemoval(power);
+            }
+        }
+    }
+
+    private void applyElementBlock(ELEMENT element){
+        elementBlock = element;
+    }
+
+    private void applyScoreRemoval(PowerEffect power){
+        if (power.getPlayerID() == 1){
+            removeScore(power, botPlayer);
+        } else {
+            removeScore(power, humanPlayer);
+        }
+    }
+
+    private void removeScore(PowerEffect power, Player player){
+        switch (power.effect){
+            case FIRE_REMOVAL:
+                player.getScore().removeFromScore(ELEMENT.FIRE);
+                break;
+            case WATER_REMOVAL:
+                player.getScore().removeFromScore(ELEMENT.WATER);
+                break;
+            case SNOW_REMOVAL:
+                player.getScore().removeFromScore(ELEMENT.SNOW);
+                break;
+            case BLUE_REMOVAL:
+                player.getScore().removeFromScore(COLOR.BLUE);
+                break;
+            case RED_REMOVAL:
+                player.getScore().removeFromScore(COLOR.RED);
+                break;
+            case GREEN_REMOVAL:
+                player.getScore().removeFromScore(COLOR.GREEN);
+                break;
+            case YELLOW_REMOVAL:
+                player.getScore().removeFromScore(COLOR.YELLOW);
+                break;
+            case ORANGE_REMOVAL:
+                player.getScore().removeFromScore(COLOR.ORANGE);
+                break;
+            case PURPLE_REMOVAL:
+                player.getScore().removeFromScore(COLOR.PURPLE);
+                break;
+            default:
+        }
+    }
+
     private boolean finishGame(){
         if (humanPlayer.getScore().hasWon()){
             System.out.println("You won!");
-            return false;
+            return true;
         } else if (botPlayer.getScore().hasWon()){
             System.out.println("You lost!");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

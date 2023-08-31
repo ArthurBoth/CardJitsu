@@ -42,10 +42,10 @@ In case of both cards having the same element and the same number, then it's a t
     - **Color removal** *(Applies only if the card **wins**)*
         - Has six variations *Red*, *Blue*, *Yellow*, *Green*, *Orange* and *Purple*.
         - Removes a random card with a specific color from the opponent's score.
-    - **Element change** *(Applies only if the card **wins**)*.
+    - **Element change** *(Applies even if the card **looses**)*.
         - Has three variations *Fire->Snow*,*Water->Fire* and *Snow->Water*.
         - Turns both player's *X* element cards into *Y* element cards (they keep all their other attributes), for the next battle only.
-    - **Element block** *(Applies even if the card **looses**)*.
+    - **Element block** *(Applies only if the card **wins**)*.
         - Has three variations *Fire*,*Water* and *Snow*.
         - Prevent's the opponent from playing any card of a specific element, for the next battle only.
         - If all cards in a player's hand are blocked, they put their hand into the bottom of their deck, draw a new one and the **Element Block** effect expires.
