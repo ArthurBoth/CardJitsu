@@ -4,5 +4,8 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar"
     ],
-    "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}${appName}"
+    "window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}${appName}",
+    "cSpell.words": [
+        "EFFECTTYPE"
+    ]
 }

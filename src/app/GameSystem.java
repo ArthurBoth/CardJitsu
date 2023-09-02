@@ -3,8 +3,11 @@ package app;
 import player.*;
 import java.util.*;
 import enumerations.*;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.*;
 
-public class GameSystem {
+public class GameSystem { // TODO update Class Diagram
     
     private Player humanPlayer;
     private PlayerBot botPlayer;
@@ -27,8 +30,13 @@ public class GameSystem {
     }
 
     private void setup(){
-        humanPlayer.generateDeck();
-        botPlayer.generateDeck();
+        try {
+            humanPlayer.setDeck(readCSV("playerDeck.csv"));
+            botPlayer.setDeck(readCSV("playerDeck.csv"));
+        } catch (IOException e) {
+            humanPlayer.generateDeck();
+            botPlayer.generateDeck();
+        }
 
         humanPlayer.newHand();
         botPlayer.newHand();
@@ -42,12 +50,26 @@ public class GameSystem {
         System.out.println(humanPlayer.getScore().toString());
         System.out.print("\n");
         System.out.println("Your hand:");
+        printPlayerHand();
+        System.out.print("Choose a card to play: ");
+    }
+
+    private void printPlayerHand(){
+        /* 
+        * TODO check if any color is blocked
+        * if it is, check if player has any card of that element
+        * check if they ONLY have cards of that element
+        * if they do, redraw hand, shuffle deck and disable the element block
+        * if they don't, print only cards that are not of that element
+        * prevent player from choosing cards of that element
+        */
+
+        // for now, just print the whole hand
         System.out.println("[1] " + humanPlayer.getHand()[0].toString());
         System.out.println("[2] " + humanPlayer.getHand()[1].toString());
         System.out.println("[3] " + humanPlayer.getHand()[2].toString());
         System.out.println("[4] " + humanPlayer.getHand()[3].toString());
         System.out.println("[5] " + humanPlayer.getHand()[4].toString());
-        System.out.print("Choose a card to play: ");
     }
 
     private int input(){
@@ -71,6 +93,101 @@ public class GameSystem {
         return input;
     }
     
+    private Queue<Card> readCSV(String file) throws IOException{
+        Queue<Card> returnValue = new LinkedList<>();
+        Path path = Paths.get("src/input/" + file);
+        try (BufferedReader reader = Files.newBufferedReader(path, Charset.defaultCharset())){
+            String line = reader.readLine();
+            Scanner scanner;
+
+            while ((line = reader.readLine()) != null){
+                scanner = new Scanner(line).useDelimiter(";");
+
+                ELEMENT cardElement = getElement(scanner.next());
+                int cardNumber = Integer.parseInt(scanner.next());
+                COLOR cardColor = getColor(scanner.next());
+                EFFECTTYPE cardEffect = getEffect(scanner.next());
+
+                returnValue.add(new Card(cardElement, cardNumber, cardColor, cardEffect));
+            }
+        }
+        catch (IOException e){
+            throw new IOException("Couldn't read a file");
+        }
+        return returnValue;
+    }
+
+    private ELEMENT getElement(String element){
+        switch(element){
+            case "FIRE":
+                return ELEMENT.FIRE;
+            case "WATER":
+                return ELEMENT.WATER;
+            default:
+                return ELEMENT.SNOW;
+        }
+    }
+
+    private COLOR getColor(String color){
+        switch(color){
+            case "BLUE":
+                return COLOR.BLUE;
+            case "RED":
+                return COLOR.RED;
+            case "GREEN":
+                return COLOR.GREEN;
+            case "YELLOW":
+                return COLOR.YELLOW;
+            case "ORANGE":
+                return COLOR.ORANGE;
+            default:
+                return COLOR.PURPLE;
+        }
+    }
+
+    private EFFECTTYPE getEffect(String effect){
+        switch(effect){
+            case "POWER_REVERSAL":
+                return EFFECTTYPE.POWER_REVERSAL;
+            case "NUMBER_MODIFIER_SELF":
+                return EFFECTTYPE.NUMBER_MODIFIER_SELF;
+            case "NUMBER_MODIFIER_OTHER":
+                return EFFECTTYPE.NUMBER_MODIFIER_OTHER;
+            case "FIRE_REMOVAL":
+                return EFFECTTYPE.FIRE_REMOVAL;
+            case "WATER_REMOVAL":
+                return EFFECTTYPE.WATER_REMOVAL;
+            case "SNOW_REMOVAL":
+                return EFFECTTYPE.SNOW_REMOVAL;
+            case "BLUE_REMOVAL":
+                return EFFECTTYPE.BLUE_REMOVAL;
+            case "RED_REMOVAL":
+                return EFFECTTYPE.RED_REMOVAL;
+            case "GREEN_REMOVAL":
+                return EFFECTTYPE.GREEN_REMOVAL;
+            case "YELLOW_REMOVAL":
+                return EFFECTTYPE.YELLOW_REMOVAL;
+            case "ORANGE_REMOVAL":
+                return EFFECTTYPE.ORANGE_REMOVAL;
+            case "PURPLE_REMOVAL":
+                return EFFECTTYPE.PURPLE_REMOVAL;
+            case "CHANGE_FIRE_TO_SNOW":
+                return EFFECTTYPE.CHANGE_FIRE_TO_SNOW;
+            case "CHANGE_WATER_TO_FIRE":
+                return EFFECTTYPE.CHANGE_WATER_TO_FIRE;
+            case "CHANGE_SNOW_TO_WATER":
+                return EFFECTTYPE.CHANGE_SNOW_TO_WATER;
+            case "BLOCK_FIRE":
+                return EFFECTTYPE.BLOCK_FIRE;
+            case "BLOCK_WATER":
+                return EFFECTTYPE.BLOCK_WATER;
+            case "BLOCK_SNOW":
+                return EFFECTTYPE.BLOCK_SNOW;
+            default:
+                return EFFECTTYPE.NO_EFFECT;
+        }
+    }
+
     private void cardBattle(int playerInput){
      /*
      * TODO add fire block effect
@@ -116,22 +233,18 @@ public class GameSystem {
             power = effects.poll();
             switch (power.effect){
                 case BLOCK_FIRE:
-                    applyElementBlock(ELEMENT.FIRE);
+                    elementBlock = ELEMENT.FIRE;
                     break;
                 case BLOCK_WATER:
-                    applyElementBlock(ELEMENT.WATER);
+                    elementBlock = ELEMENT.WATER;
                     break;
                 case BLOCK_SNOW:
-                    applyElementBlock(ELEMENT.SNOW);
+                    elementBlock = ELEMENT.SNOW;
                     break;
                 default:
                     applyScoreRemoval(power);
             }
         }
-    }
-
-    private void applyElementBlock(ELEMENT element){
-        elementBlock = element;
     }
 
     private void applyScoreRemoval(PowerEffect power){

@@ -13,8 +13,7 @@ public class Player {
 
     public Player() {
         this.score = new Score();
-        this.hand = new Card[5];
-        this.deck = new LinkedList<>();
+        this.hand = new Card[5];;
     }
 
     public void newHand() {
@@ -49,8 +48,13 @@ public class Player {
         return hand;
     }
 
+    public void setDeck(Queue<Card> deck){
+        this.deck = deck;
+        shuffleDeck();
+    }
+
     public void generateDeck() {
-        
+        this.deck =  new LinkedList<>();
         for (int i=0;i<20;i++){
             deck.add(makeCard());
         }
