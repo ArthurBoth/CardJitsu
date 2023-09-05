@@ -13,7 +13,7 @@ public class Player {
 
     public Player() {
         this.score = new Score();
-        this.hand = new Card[5];;
+        this.hand = new Card[5];
     }
 
     public void newHand() {
