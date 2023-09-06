@@ -12,7 +12,8 @@ public class GameSystem { // TODO update Class Diagram
     private Player humanPlayer;
     private PlayerBot botPlayer;
     private Battle judge;
-    private ELEMENT elementBlock; // TODO implement element block
+    private ELEMENT elementBlock = null;
+    private int inputLimit = 5;
 
     public GameSystem(){
         this.humanPlayer = new Player();
@@ -50,26 +51,40 @@ public class GameSystem { // TODO update Class Diagram
         System.out.println(humanPlayer.getScore().toString());
         System.out.print("\n");
         System.out.println("Your hand:");
-        printPlayerHand();
+        printHand();
         System.out.print("Choose a card to play: ");
     }
 
-    private void printPlayerHand(){
-        /* 
-        * TODO check if any color is blocked
-        * if it is, check if player has any card of that element
-        * check if they ONLY have cards of that element
-        * if they do, redraw hand, shuffle deck and disable the element block
-        * if they don't, print only cards that are not of that element
-        * prevent player from choosing cards of that element
-        */
+    private void printHand(){
+        if (elementBlock == null){
+            for (int i = 0; i < 5; i++){
+                System.out.println("[" + (i+1) + "] " + humanPlayer.getHand()[i].toString());
+            }
+            inputLimit = 5;
+            return;
+        }
 
-        // for now, just print the whole hand
-        System.out.println("[1] " + humanPlayer.getHand()[0].toString());
-        System.out.println("[2] " + humanPlayer.getHand()[1].toString());
-        System.out.println("[3] " + humanPlayer.getHand()[2].toString());
-        System.out.println("[4] " + humanPlayer.getHand()[3].toString());
-        System.out.println("[5] " + humanPlayer.getHand()[4].toString());
+        Card[] hand = humanPlayer.getHand();
+        ArrayList<Card> availableCards = new ArrayList<>();
+
+        for (int i = 0; i<5; i++){
+            if (hand[i].element != elementBlock){
+                availableCards.add(hand[i]);
+            }
+        }
+
+        if (availableCards.isEmpty()){
+            humanPlayer.newHand();
+            elementBlock = null;
+            printHand();
+            return;
+        }
+
+        for (int i = 0; i < availableCards.size(); i++){
+            System.out.println("[" + (i+1) + "]" + availableCards.get(i).toString());
+            inputLimit = availableCards.size();
+        }
+        elementBlock = null;
     }
 
     private int input(){
@@ -79,9 +94,9 @@ public class GameSystem { // TODO update Class Diagram
 
         while(flag){
             flag = false;
-            try {
+            try { 
                 input = scanner.nextInt();
-                if ((input < 1) || (input > 5)){
+                if ((input < 1) || (input > inputLimit)){
                     throw new InputMismatchException();
                 }
             } catch (Exception e) {
@@ -189,11 +204,6 @@ public class GameSystem { // TODO update Class Diagram
     }
 
     private void cardBattle(int playerInput){
-     /*
-     * TODO add fire block effect
-     * TODO add water block effect
-     * TODO add snow block effect
-     */
         int battleResult;
         Card playerCard = humanPlayer.playCard(playerInput-1);
         Card botCard = botPlayer.playCard();
