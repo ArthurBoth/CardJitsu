@@ -44,15 +44,21 @@ public class GameSystem { // TODO update Class Diagram
     }
 
     private void menu(){
-        System.out.println("Opponent's score:");
-        System.out.println(botPlayer.getScore().toString());
-        System.out.println("------------------------------------------------------------");
-        System.out.println("Your score:");
-        System.out.println(humanPlayer.getScore().toString());
-        System.out.print("\n");
+        // TODO display effects
+        printScores();
         System.out.println("Your hand:");
         printHand();
         System.out.print("Choose a card to play: ");
+    }
+
+    private void printScores(){
+        System.out.println("-------------------------------------------------------------");
+        System.out.println("Opponent's score:\n");
+        System.out.print(botPlayer.getScore().toString());
+        System.out.println("------------------------------------------------------------");
+        System.out.println("Your score:\n");
+        System.out.print(humanPlayer.getScore().toString());
+        System.out.println("------------------------------------------------------------");
     }
 
     private void printHand(){
@@ -94,14 +100,16 @@ public class GameSystem { // TODO update Class Diagram
 
         while(flag){
             flag = false;
-            try { 
-                input = scanner.nextInt();
+            try {
+                input = Integer.parseInt(scanner.next());
                 if ((input < 1) || (input > inputLimit)){
                     throw new InputMismatchException();
                 }
             } catch (Exception e) {
                 System.out.print("Invalid input, try again: ");
                     flag = true;
+            } finally {
+                scanner.close();
             }
         }
         
@@ -300,10 +308,12 @@ public class GameSystem { // TODO update Class Diagram
 
     private boolean finishGame(){
         if (humanPlayer.getScore().hasWon()){
-            System.out.println("You won!");
+            System.out.println("YOU WIN!");
+            printScores();
             return true;
         } else if (botPlayer.getScore().hasWon()){
             System.out.println("You lost!");
+            printScores();
             return true;
         }
         return false;

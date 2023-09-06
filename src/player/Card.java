@@ -36,7 +36,7 @@ public class Card implements Comparable<Card>{
     }
 
     @Override
-    public String toString(){
+    public String toString(){ // TODO add powerEffect
         return "A " + element.toString() + " " + number + ", " + color.toString() + " colored card.";
     }
 }
