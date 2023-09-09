@@ -13,7 +13,6 @@ public class GameSystem { // TODO update Class Diagram
     private PlayerBot botPlayer;
     private Battle judge;
     private ELEMENT elementBlock = null;
-    private int inputLimit = 5;
 
     public GameSystem(){
         this.humanPlayer = new Player();
@@ -24,9 +23,9 @@ public class GameSystem { // TODO update Class Diagram
     public void play(){
         setup();
         while(!finishGame()){
-            menu();
-            int input = input();
-            cardBattle(input);
+            UserInteraction.printMenu(humanPlayer, botPlayer, elementBlock);
+            elementBlock = null;
+            cardBattle(UserInteraction.playerInput());
         }
     }
 
@@ -41,79 +40,6 @@ public class GameSystem { // TODO update Class Diagram
 
         humanPlayer.newHand();
         botPlayer.newHand();
-    }
-
-    private void menu(){
-        // TODO display effects
-        printScores();
-        System.out.println("Your hand:");
-        printHand();
-        System.out.print("Choose a card to play: ");
-    }
-
-    private void printScores(){
-        System.out.println("-------------------------------------------------------------");
-        System.out.println("Opponent's score:\n");
-        System.out.print(botPlayer.getScore().toString());
-        System.out.println("------------------------------------------------------------");
-        System.out.println("Your score:\n");
-        System.out.print(humanPlayer.getScore().toString());
-        System.out.println("------------------------------------------------------------");
-    }
-
-    private void printHand(){
-        if (elementBlock == null){
-            for (int i = 0; i < 5; i++){
-                System.out.println("[" + (i+1) + "] " + humanPlayer.getHand()[i].toString());
-            }
-            inputLimit = 5;
-            return;
-        }
-
-        Card[] hand = humanPlayer.getHand();
-        ArrayList<Card> availableCards = new ArrayList<>();
-
-        for (int i = 0; i<5; i++){
-            if (hand[i].element != elementBlock){
-                availableCards.add(hand[i]);
-            }
-        }
-
-        if (availableCards.isEmpty()){
-            humanPlayer.newHand();
-            elementBlock = null;
-            printHand();
-            return;
-        }
-
-        for (int i = 0; i < availableCards.size(); i++){
-            System.out.println("[" + (i+1) + "]" + availableCards.get(i).toString());
-            inputLimit = availableCards.size();
-        }
-        elementBlock = null;
-    }
-
-    private int input(){
-        Scanner scanner = new Scanner(System.in);
-        boolean flag = true;
-        int input = -1;
-
-        while(flag){
-            flag = false;
-            try {
-                input = Integer.parseInt(scanner.next());
-                if ((input < 1) || (input > inputLimit)){
-                    throw new InputMismatchException();
-                }
-            } catch (Exception e) {
-                System.out.print("Invalid input, try again: ");
-                    flag = true;
-            } finally {
-                scanner.close();
-            }
-        }
-        
-        return input;
     }
     
     private Queue<Card> readCSV(String file) throws IOException{
@@ -216,32 +142,25 @@ public class GameSystem { // TODO update Class Diagram
         Card playerCard = humanPlayer.playCard(playerInput-1);
         Card botCard = botPlayer.playCard();
         
-        System.out.println("\n");
-        System.out.println("-------------------------------------------------------------------------------");
-
-        System.out.println("You played " + playerCard.toString().toLowerCase());
-        System.out.println("Your opponent played " + botCard.toString().toLowerCase());
+        UserInteraction.printCardBattle(playerCard, botCard);
 
         battleResult = judge.battle(playerCard, botCard);
         applyEffects(judge.getPostBattleEffects());
 
-        System.out.println("-------------------------------------------------------------------------------");
-        System.out.println("\n");
+        UserInteraction.printBattleResults(battleResult);
 
         switch(battleResult){
-            case 1:
-                System.out.println("You won this round!");
+            case 1: // human wins
                 humanPlayer.getScore().addToScore(playerCard);
                 botPlayer.discardCard(botCard);
                 break;
-            case -1:
-                System.out.println("You lost this round!");
+            case -1: // bot wins
                 botPlayer.getScore().addToScore(botCard);
                 humanPlayer.discardCard(playerCard);
                 break;
-            default:
-                System.out.println("Draw!");
-                break;
+            default: // draw
+                humanPlayer.discardCard(playerCard);
+                botPlayer.discardCard(botCard);
         }
     }
 
@@ -308,12 +227,10 @@ public class GameSystem { // TODO update Class Diagram
 
     private boolean finishGame(){
         if (humanPlayer.getScore().hasWon()){
-            System.out.println("YOU WIN!");
-            printScores();
+            UserInteraction.printVictoryMessage(humanPlayer, botPlayer);
             return true;
         } else if (botPlayer.getScore().hasWon()){
-            System.out.println("You lost!");
-            printScores();
+            UserInteraction.printLossMessage(humanPlayer, botPlayer);
             return true;
         }
         return false;

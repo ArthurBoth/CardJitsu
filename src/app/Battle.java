@@ -6,7 +6,6 @@ import java.util.*;
 
 public class Battle {
     private Queue<PowerEffect> postBattleEffects = new LinkedList<>();
-
     private Queue<PowerEffect> currentTurnEffects = new LinkedList<>();
     private Queue<PowerEffect> nextTurnEffects = new LinkedList<>();
     private boolean reverseBattle;
