@@ -17,6 +17,10 @@ public class Player {
     }
 
     public void newHand() {
+        if (deck.size() < 5) {
+            System.exit(-1);
+        }
+
         for (int i=0; i<5; i++) {
             if (hand[i] != null) {
                 deck.add(hand[i]);
@@ -33,6 +37,10 @@ public class Player {
     }
 
     public Card playCard(int cardIndex) {
+        if (deck.isEmpty()) {
+            System.exit(-1);
+        }
+
         Card playedCard = hand[cardIndex];
         hand[cardIndex] = deck.poll();
         return playedCard;
