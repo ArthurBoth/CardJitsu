@@ -40,14 +40,16 @@ public class UserInteraction {
                 }
             } catch (NumberFormatException e) {
                 System.out.print("Your input is not a number, please try again: ");
-                    flag = true;
+                flag = true;
             } catch (IllegalArgumentException e){
                 System.out.printf("Your input must be between 1 and %d, please try again: ", playerInputMaxLimit);
-            } finally {
-                scanner.close();
+                flag = true;
+            } catch (Exception e){
+                System.out.println("Something went wrong, please try again: ");
+                flag = true;
             }
-        }while(flag);
-        
+        } while(flag);
+
         return input;
     }
 

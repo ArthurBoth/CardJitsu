@@ -58,7 +58,7 @@ public class Score {
         return (colors.size() >= 3);
     }
 
-    private boolean winByAllElements(){
+    private boolean winByAllElements(){ //TODO refactor and test
         HashSet<COLOR> fireColors = new HashSet<>();
         HashSet<COLOR> waterColors = new HashSet<>();
         HashSet<COLOR> snowColors = new HashSet<>();
