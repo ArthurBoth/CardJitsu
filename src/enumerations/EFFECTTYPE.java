@@ -9,8 +9,8 @@ public enum EFFECTTYPE {
     BLOCK_FIRE,BLOCK_WATER,BLOCK_SNOW;
 
     @Override
-    public String toString(){
+    public String toString() {
         String formattedName = this.name().charAt(0) + this.name().substring(1).toLowerCase();
-        return formattedName.replace("_", " ");
+        return (formattedName.replace("_", " "));
     }
 }
