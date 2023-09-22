@@ -16,37 +16,39 @@ public class Score {
         playerScore.add(card);
     }
 
-    public void removeFromScore(COLOR color) {
+    public Card removeFromScore(COLOR color) {
         for (Card c : playerScore) {
             if (c.color == color) {
                 playerScore.remove(c);
-                return;
+                return c;
             }
         }
+        return null;
     }
 
-    public void removeFromScore(ELEMENT element) {
+    public Card removeFromScore(ELEMENT element) {
         for (Card c : playerScore) {
             if (c.element == element) {
                 playerScore.remove(c);
-                return;
+                return c;
             }
         }
+        return null;
     }
 
-    public boolean hasWon(){
+    public boolean hasWon() {
         return (winBySingleElement() || winByAllElements());
     }
     
-    private boolean winBySingleElement(){
-        boolean flagFire = checkSingleElement(ELEMENT.FIRE);
-        boolean flagWater = checkSingleElement(ELEMENT.WATER);
-        boolean flagSnow = checkSingleElement(ELEMENT.SNOW);
+    private boolean winBySingleElement() {
+        boolean wonByFire = checkSingleElement(ELEMENT.FIRE);
+        boolean wonByWater = checkSingleElement(ELEMENT.WATER);
+        boolean wonBySnow = checkSingleElement(ELEMENT.SNOW);
 
-        return (flagFire || flagWater || flagSnow);
+        return (wonByFire || wonByWater || wonBySnow);
     }
 
-    private boolean checkSingleElement(ELEMENT element){
+    private boolean checkSingleElement(ELEMENT element) {
         HashSet<COLOR> colors = new HashSet<>();
 
         for (Card c : playerScore) {
@@ -55,28 +57,29 @@ public class Score {
             }
         }
 
-        return (colors.size() >= 3);
+        return (colors.size() > 2);
     }
 
-    private boolean winByAllElements(){ //TODO refactor and test
+    private boolean winByAllElements() { //TODO refactor and test
         HashSet<COLOR> fireColors = new HashSet<>();
         HashSet<COLOR> waterColors = new HashSet<>();
         HashSet<COLOR> snowColors = new HashSet<>();
          
-        for(Card c : playerScore){
-            if(c.element == ELEMENT.FIRE){
-                fireColors.add(c.color);
-            }
-            else if(c.element == ELEMENT.WATER){
-                waterColors.add(c.color);
-            }
-            else{
-                snowColors.add(c.color);
+        for (Card c : playerScore) {
+            switch (c.element) {
+                case FIRE:
+                    fireColors.add(c.color);
+                    break;
+                case WATER:
+                    waterColors.add(c.color);
+                    break;
+                default:
+                    snowColors.add(c.color);
             }
         }
 
         for (COLOR color : fireColors) {
-            if(checkDifferentColors(color, waterColors, snowColors)){
+            if (checkDifferentColors(color, waterColors, snowColors)) {
                 return true;
             }
         }
@@ -85,17 +88,21 @@ public class Score {
     }
 
     /*
-     * Returns true if 'waterColors' and 'snowColors' have at least one color different from each other and from 'color'
+     * Returns true if 'element1' and 'element2' have at least one color different from each other and from 'color'
      */
-    private boolean checkDifferentColors(COLOR color, HashSet<COLOR> element1, HashSet<COLOR> element2){
+    private boolean checkDifferentColors(COLOR color, HashSet<COLOR> element1, HashSet<COLOR> element2) {
         HashSet<COLOR> elem1 = new HashSet<>(element1);
         HashSet<COLOR> elem2 = new HashSet<>(element2);
 
         elem1.remove(color);
         elem2.remove(color);
 
-        for(COLOR c : elem1){
-            if(!elem2.contains(c)){
+        if (elem1.isEmpty() || elem2.isEmpty()) {
+            return false;
+        }
+
+        for (COLOR c : elem1) {
+            if (!elem2.contains(c)) {
                 return true;
             }
         }
@@ -108,36 +115,45 @@ public class Score {
         HashMap<COLOR,Integer> fireColors = new HashMap<>();
         HashMap<COLOR,Integer> waterColors = new HashMap<>();
         HashMap<COLOR,Integer> snowColors = new HashMap<>();
+
+        StringBuilder str;
          
-        for(Card c : playerScore){
-            if(c.element == ELEMENT.FIRE){
-                fireColors.merge(c.color, 1, Integer::sum);
-            }
-            else if(c.element == ELEMENT.WATER){
-                waterColors.merge(c.color, 1, Integer::sum);
-            }
-            else{
-                snowColors.merge(c.color, 1, Integer::sum);
+        for (Card c : playerScore) {
+            switch (c.element) {
+                case FIRE:
+                    fireColors.merge(c.color, 1, Integer::sum);
+                    break;
+                case WATER:
+                    waterColors.merge(c.color, 1, Integer::sum);
+                    break;
+                default:
+                    snowColors.merge(c.color, 1, Integer::sum);
             }
         }
 
 
-        StringBuilder str = new StringBuilder("Fire cards:\n");
-        for (Entry<COLOR, Integer> entry : fireColors.entrySet()) {
-            str.append("\t" + entry.getValue() + " " + entry.getKey().toString() + " fire card");
-            if (entry.getValue() != 1) str.append("s");
+        str = new StringBuilder("Fire cards:\n");
+        for (Entry<COLOR, Integer> count : fireColors.entrySet()) {
+            str.append("\t" + count.getValue() + " " + count.getKey().toString() + " fire card");
+            if (count.getValue() != 1) {
+                str.append("s");
+            }
             str.append(".\n");
         }
         str.append("Water cards:\n");
-        for (Entry<COLOR, Integer> entry : waterColors.entrySet()) {
-            str.append("\t" + entry.getValue() + " " + entry.getKey().toString() + " water card");
-            if (entry.getValue() != 1) str.append("s");
+        for (Entry<COLOR, Integer> count : waterColors.entrySet()) {
+            str.append("\t" + count.getValue() + " " + count.getKey().toString() + " water card");
+            if (count.getValue() != 1) {
+                str.append("s");
+            } 
             str.append(".\n");
         }
         str.append("Snow cards:\n");
-        for (Entry<COLOR, Integer> entry : snowColors.entrySet()) {
-            str.append("\t" + entry.getValue() + " " + entry.getKey().toString() + " snow card");
-            if (entry.getValue() != 1) str.append("s");
+        for (Entry<COLOR, Integer> count : snowColors.entrySet()) {
+            str.append("\t" + count.getValue() + " " + count.getKey().toString() + " snow card");
+            if (count.getValue() != 1) {
+                str.append("s");
+            } 
             str.append(".\n");
         }
         return str.toString();
