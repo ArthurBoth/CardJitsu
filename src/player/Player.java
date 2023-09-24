@@ -16,6 +16,8 @@ public class Player {
         this.hand = new Card[5];
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public void newHand() {
         if (deck.size() < 5) {
             System.exit(-1);
@@ -36,6 +38,13 @@ public class Player {
         deck = new LinkedList<>(list);
     }
 
+    public void setDeck(Queue<Card> deck) {
+        this.deck = deck;
+        shuffleDeck();
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public Card playCard(int cardIndex) {
         if (deck.isEmpty()) {
             System.exit(-1);
@@ -46,7 +55,9 @@ public class Player {
         return playedCard;
     }
 
-    public void discardCard(Card card) {
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    public void returnToDeck(Card card) {
         deck.add(card);
     }
 
@@ -58,11 +69,8 @@ public class Player {
         return hand;
     }
 
-    public void setDeck(Queue<Card> deck) {
-        this.deck = deck;
-        shuffleDeck();
-    }
-
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public void generateDeck() {
         this.deck =  new LinkedList<>();
 

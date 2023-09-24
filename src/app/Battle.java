@@ -13,16 +13,19 @@ public class Battle {
     private static boolean reverseBattle;
     private static Card player1Card;
     private static Card player2Card;
-    private static int battleWinnerID;
+    private static int lastBattleWinnerID;
+    // TODO implement element block here instead of in GameSystem
 
     private Battle() {
         throw new IllegalStateException("Utility class");
     }
 
-    /*
-     * Returns a positive number if player1 wins, negative if player2 wins, 0 if they draw
-     */
-    public static int battle(Card p1Card,Card p2Card){
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    // Returns a positive number if player1 wins, negative if player2 wins, 0 if they draw
+    public static int battle(Card p1Card,Card p2Card) {
+        reset();
+
         int battleResult;
         player1Card = p1Card;
         player2Card = p2Card;
@@ -35,59 +38,12 @@ public class Battle {
         return battleResult;
     }
 
-    public static Queue<PowerEffect> getPostBattleEffects(){
-        Queue<PowerEffect> returnValue = new LinkedList<>();
-        PowerEffect power;
-
-        while (!postBattleEffects.isEmpty()){
-            power = postBattleEffects.poll();
-
-            if (power.getPlayerID() == battleWinnerID)
-                returnValue.add(power);
-        }
-
-        postBattleEffects = new LinkedList<>();
-
-        return returnValue;
-    }
-
-    private static void endBattle(int battleResult){
-        if (battleResult > 0) {
-            battleWinnerID = 1;
-        } else if (battleResult < 0) {
-            battleWinnerID = 2;
-        } else {
-            battleWinnerID = 0;
-        }
+    private static void reset() {
         currentTurnEffects = nextTurnEffects;
         nextTurnEffects = new LinkedList<>();
         reverseBattle = false;
         player1Card = null;
         player2Card = null;
-    }
-
-    private static int cardBattle() {
-        int winner;
-        int elementBattle = elementBattle();
-
-        if(elementBattle != 0){
-            return elementBattle;
-        }
-
-        winner = tieBreaker();
-
-        if (reverseBattle){
-            return -winner;
-        }
-        return winner;
-    }
-
-    private static int elementBattle(){
-         return player1Card.element.elementBattle(player2Card.element);
-    }
-
-    private static int tieBreaker(){
-        return player1Card.compareTo(player2Card);
     }
 
     private static void getPowerEffects() {
@@ -108,6 +64,44 @@ public class Battle {
         }
     }
 
+    private static void endBattle(int battleResult) {
+        if (battleResult > 0) {
+            lastBattleWinnerID = 1;
+        } else if (battleResult < 0) {
+            lastBattleWinnerID = 2;
+        } else {
+            lastBattleWinnerID = 0;
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    private static int cardBattle() {
+        int winner;
+        int elementBattle = elementBattle();
+
+        if(elementBattle != 0){
+            return elementBattle;
+        }
+
+        winner = tieBreaker();
+
+        if (reverseBattle){
+            return -winner;
+        }
+        return winner;
+    }
+
+    private static int elementBattle() {
+         return player1Card.element.elementBattle(player2Card.element);
+    }
+
+    private static int tieBreaker() {
+        return player1Card.compareTo(player2Card);
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     private static void applyInBattleEffects() {
         while (!currentTurnEffects.isEmpty()) {
 
@@ -202,5 +196,27 @@ public class Battle {
                 return;
             default:
         }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    public static Queue<PowerEffect> getNextTurnEffects() {
+        return new LinkedList<>(nextTurnEffects);
+    }
+
+    public static Queue<PowerEffect> getPostBattleEffects() {
+        Queue<PowerEffect> returnValue = new LinkedList<>();
+        PowerEffect power;
+
+        while (!postBattleEffects.isEmpty()){
+            power = postBattleEffects.poll();
+
+            if (power.getPlayerID() == lastBattleWinnerID)
+                returnValue.add(power);
+        }
+
+        postBattleEffects = new LinkedList<>();
+
+        return returnValue;
     }
 }

@@ -37,8 +37,8 @@ public class Card implements Comparable<Card> {
     public String toString() {
         String returnString = ("A %s %d, %s colored card").formatted(element.toString(), number, color.toString());
         if (powerEffect == EFFECTTYPE.NO_EFFECT) {
-            return (returnString + ".");
+            return returnString;
         }
-        return (returnString + " with a \u001B[34m" + powerEffect.toString() + " effect\u001B[0m.");
+        return (returnString + " with a \u001B[34m" + powerEffect.toString() + " effect\u001B[0m");
     }
 }

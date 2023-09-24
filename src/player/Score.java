@@ -12,6 +12,8 @@ public class Score {
         this.playerScore = new ArrayList<>();
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public void addToScore(Card card) {
         playerScore.add(card);
     }
@@ -36,6 +38,8 @@ public class Score {
         return null;
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public boolean hasWon() {
         return (winBySingleElement() || winByAllElements());
     }
@@ -110,6 +114,8 @@ public class Score {
         return false;
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     @Override
     public String toString() {
         HashMap<COLOR,Integer> fireColors = new HashMap<>();

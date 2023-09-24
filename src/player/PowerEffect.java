@@ -29,6 +29,8 @@ public class PowerEffect {
         this.playerID = playerID;
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public static boolean applyNextTurn(EFFECTTYPE e) {
         return nextTurnEffects.contains(e);
     }
