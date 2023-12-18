@@ -1,6 +1,8 @@
+
 package player;
 
 import java.util.*;
+
 import enumerations.*;
 
 public class Player {
@@ -14,28 +16,49 @@ public class Player {
         this.hand = new Card[5];
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public void newHand() {
-        for (int i=0;i<5;i++) {
-            if (hand[i] != null) deck.add(hand[i]);
+        if (deck.size() < 5) {
+            throw new IllegalStateException("Deck is too small to draw a new hand.");
+        }
+
+        for (int i=0; i<5; i++) {
+            if (hand[i] != null) {
+                deck.add(hand[i]);
+            }
             hand[i] = deck.poll();
         }
         shuffleDeck();
-    }
-
-    public Card playCard(int cardIndex){
-        Card playedCard = hand[cardIndex];
-        hand[cardIndex] = deck.poll();
-        return playedCard;
-    }
-
-    public void discardCard(Card card){
-        deck.add(card);
     }
 
     private void shuffleDeck() {
         List<Card> list = new ArrayList<>(deck);
         Collections.shuffle(list);
         deck = new LinkedList<>(list);
+    }
+
+    public void setDeck(Queue<Card> deck) {
+        this.deck = deck;
+        shuffleDeck();
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    public Card playCard(int cardIndex) {
+        if (deck.isEmpty()) {
+            throw new IllegalStateException("Deck is empty.");
+        }
+
+        Card playedCard = hand[cardIndex];
+        hand[cardIndex] = deck.poll();
+        return playedCard;
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    public void returnToDeck(Card card) {
+        deck.add(card);
     }
 
     public Score getScore() {
@@ -46,19 +69,17 @@ public class Player {
         return hand;
     }
 
-    public void setDeck(Queue<Card> deck){
-        this.deck = deck;
-        shuffleDeck();
-    }
-
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
     public void generateDeck() {
         this.deck =  new LinkedList<>();
-        for (int i=0;i<20;i++){
+
+        for (int i=0;i<20;i++) {
             deck.add(makeCard());
         }
     }
     
-    private Card makeCard(){
+    private Card makeCard() {
         int randomElement = random.nextInt(3);
         int randomNumber = random.nextInt(2,13);
         int randomColor = random.nextInt(6);
@@ -68,7 +89,7 @@ public class Player {
         COLOR color;
         EFFECTTYPE effect;
 
-        switch(randomElement){
+        switch (randomElement) {
             case 0:
                 element = ELEMENT.FIRE;
                 break;
@@ -80,7 +101,7 @@ public class Player {
                 break;
         }
 
-        switch(randomColor){
+        switch (randomColor) {
             case 0:
                 color = COLOR.BLUE;
                 break;
@@ -102,7 +123,7 @@ public class Player {
         }
 
         if (randomNumber > 8) {
-            switch(randomEffect){
+            switch(randomEffect) {
             case 0:
                 effect = EFFECTTYPE.POWER_REVERSAL;
                 break;

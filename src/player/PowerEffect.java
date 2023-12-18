@@ -1,6 +1,7 @@
 package player;
 
 import java.util.*;
+
 import enumerations.EFFECTTYPE;
 
 public class PowerEffect {
@@ -19,24 +20,26 @@ public class PowerEffect {
     
     private int playerID; // refers to the player who played the card that caused the effect
     
-    public PowerEffect(EFFECTTYPE effectType){
+    public PowerEffect(EFFECTTYPE effectType) {
         this.effect = effectType;
     }
 
-    public PowerEffect(EFFECTTYPE effectType, int playerID){
+    public PowerEffect(EFFECTTYPE effectType, int playerID) {
         this.effect = effectType;
         this.playerID = playerID;
     }
 
-    public static boolean applyNextTurn(EFFECTTYPE e){
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+       
+    public static boolean applyNextTurn(EFFECTTYPE e) {
         return nextTurnEffects.contains(e);
     }
 
-    public static boolean applyOutOfBattle(EFFECTTYPE e){
+    public static boolean applyOutOfBattle(EFFECTTYPE e) {
         return outOfBattleEffects.contains(e);
     }
 
-    public int getPlayerID(){
+    public int getPlayerID() {
         return playerID;
     }
 }

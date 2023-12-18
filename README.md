@@ -13,15 +13,15 @@ The specifications may change later, but this is what I am planning for now.
 ## Game rules
 - CardJitsu is a 1v1 card game.
 - Each player has it's own deck.
-- At yhe start of every turn both players draw until they have five cards on their respective hands.
+- At the start of every turn both players draw until they have five cards on their respective hands.
 - Every turn, both players choose a card from their hand.
-- Their cards "battle" and the winning card goes to their owner's score.
-- In order to win, a player's score must have three cards of different colors and they all either must be of the same element or of different elements.
-- When a card battles and does not win, it goes to the bottom of the deck of their owner.
+- The chosen cards "battle" and the winning card goes to their owner's score.
+- In order to win, a player's score must have three cards of different colors and they all must be either of the same element or of different elements.
+- When a card battles and does not win, it goes to the bottom of their owner's deck.
 
 ### Cards and Battles
 Battles are decided by the cards attributes.
-- Every card has a single element, *Fire*,*Water* or *Snow*.
+- Every card has a single element, *Fire*, *Water* or *Snow*.
 - Every card has a number, these range from *[2-12]*.
 - Every card as a color, *Red*, *Blue*, *Yellow*, *Green*, *Orange* or *Purple*.
 
@@ -37,17 +37,19 @@ In case of both cards having the same element and the same number, then it's a t
         - The *+2* variant increases the number of the player's next card by 2.
         - The *-2* variant decreases the number of the opponent's next card by 2.
     - **Element removal** *(Applies only if the card **wins**)*
-        - Has three variations *Fire*,*Water* and *Snow*.
-        - Removes a random card with a specific element from the opponent's score.
+        - Has three variations *Fire*, *Water* and *Snow*.
+        - Removes the oldest card with a specific element from the opponent's score.
+        - Does not apply if the opponent's score does not have a card with that element.
     - **Color removal** *(Applies only if the card **wins**)*
         - Has six variations *Red*, *Blue*, *Yellow*, *Green*, *Orange* and *Purple*.
-        - Removes a random card with a specific color from the opponent's score.
+        - Removes the oldest card with a specific color from the opponent's score.
+        - Does not apply if the opponent's score does not have a card with that color.
     - **Element change** *(Applies even if the card **looses**)*.
-        - Has three variations *Fire->Snow*,*Water->Fire* and *Snow->Water*.
-        - Turns both player's *X* element cards into *Y* element cards (they keep all their other attributes), for the next battle only.
+        - Has three variations *Fire->Snow*, *Water->Fire* and *Snow->Water*.
+        - Turns both player's *X* element cards into *Y* element cards (they keep all other attributes), for the next battle only.
     - **Element block** *(Applies only if the card **wins**)*.
-        - Has three variations *Fire*,*Water* and *Snow*.
-        - Prevent's the opponent from playing any card of a specific element, for the next battle only.
+        - Has three variations *Fire*, *Water* and *Snow*.
+        - Prevents the opponent from playing any card of a specific element, for the next battle only.
         - If all cards in a player's hand are blocked, they put their hand into the bottom of their deck, draw a new one and the **Element Block** effect expires.
 
 # Updates

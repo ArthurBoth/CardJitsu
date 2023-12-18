@@ -1,10 +1,8 @@
 package player;
 
-import enumerations.COLOR;
-import enumerations.EFFECTTYPE;
-import enumerations.ELEMENT;
+import enumerations.*;
 
-public class Card implements Comparable<Card>{
+public class Card implements Comparable<Card> {
     public final ELEMENT element;
     public final int number;
     public final COLOR color;
@@ -25,18 +23,22 @@ public class Card implements Comparable<Card>{
     }
 
     @Override
-    public int compareTo(Card other){
-        if(this.number > other.number){
+    public int compareTo(Card other) {
+        if (this.number > other.number) {
             return 1;
-        }else if(this.number < other.number){
+        } else if (this.number < other.number) {
             return -1;
-        }else{
+        } else {
             return 0;
         }
     }
 
     @Override
-    public String toString(){ // TODO add powerEffect
-        return "A " + element.toString() + " " + number + ", " + color.toString() + " colored card.";
+    public String toString() {
+        String returnString = ("A %s %d, %s colored card").formatted(element.toString(), number, color.toString());
+        if (powerEffect == EFFECTTYPE.NO_EFFECT) {
+            return returnString;
+        }
+        return (returnString + " with a \u001B[34m" + powerEffect.toString() + " effect\u001B[0m");
     }
 }
