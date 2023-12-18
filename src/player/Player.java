@@ -20,7 +20,7 @@ public class Player {
        
     public void newHand() {
         if (deck.size() < 5) {
-            System.exit(-1);
+            throw new IllegalStateException("Deck is too small to draw a new hand.");
         }
 
         for (int i=0; i<5; i++) {
@@ -47,7 +47,7 @@ public class Player {
        
     public Card playCard(int cardIndex) {
         if (deck.isEmpty()) {
-            System.exit(-1);
+            throw new IllegalStateException("Deck is empty.");
         }
 
         Card playedCard = hand[cardIndex];

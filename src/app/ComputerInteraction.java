@@ -123,7 +123,7 @@ public class ComputerInteraction {
             }
         } while(flag);
 
-        return input;
+        return (input - 1);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -159,15 +159,15 @@ public class ComputerInteraction {
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
        
-    public static void printThisTurnPostBattleEffects(PowerEffect effect) {
-        boolean belongsToHumanPlayer = (effect.getPlayerID() == 1);
+    public static void printThisTurnPostBattleEffects(PowerEffect eff) {
+        boolean belongsToHumanPlayer = (eff.getPlayerID() == 1);
         System.out.printf("%s %s%s%s effect has ",
             possessiveConjugation(belongsToHumanPlayer),
             ANSI_YELLOW,
-            effect.effect.toString(),
+            eff.effect.toString(),
             ANSI_RESET);
         
-        switch (effect.effect) {
+        switch (eff.effect) {
             case BLOCK_FIRE:
                 System.out.println("blocked the fire element for the next round.");
                 return;
@@ -196,11 +196,11 @@ public class ComputerInteraction {
             effect.effect.toString(),
             ANSI_RESET);
 
-            System.out.printf("removed %s%s%s from %s score.%n",
-                ANSI_PURPLE,
-                card.toString().toLowerCase(),
-                ANSI_RESET,
-                possessiveConjugation(!belongsToHumanPlayer).toLowerCase());
+        System.out.printf("removed %s%s%s from %s score.%n",
+            ANSI_PURPLE,
+            card.toString().toLowerCase(),
+            ANSI_RESET,
+            possessiveConjugation(!belongsToHumanPlayer).toLowerCase());
     }
 
     private static String possessiveConjugation (boolean belongsToHumanPlayer) {

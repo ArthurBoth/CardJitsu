@@ -3,7 +3,7 @@ package enumerations;
 public enum ELEMENT {
     FIRE,WATER,SNOW;
 
-    public int elementBattle(ELEMENT other) {
+    public int battle(ELEMENT other) {
         if (this == other) {
             return 0;
         }

@@ -61,7 +61,7 @@ public class Score {
             }
         }
 
-        return (colors.size() > 2);
+        return (colors.size() >= 3);
     }
 
     private boolean winByAllElements() {

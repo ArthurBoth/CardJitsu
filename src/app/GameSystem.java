@@ -5,7 +5,7 @@ import java.util.*;
 import player.*;
 import enumerations.*;
 
-public class GameSystem { // TODO update Class Diagram
+public class GameSystem {
     private String playerDeckFileName = "playerDeck.csv";
     private String playerBotDeckFileName = "playerDeck.csv";
     
@@ -64,9 +64,8 @@ public class GameSystem { // TODO update Class Diagram
         Queue<PowerEffect> postBattleEffects;
         Queue<PowerEffect> nextTurnEffects;
 
-        Card playerCard = humanPlayer.playCard(playerInput-1);
-        Card botCard = botPlayer.playCard();
-
+        Card playerCard = humanPlayer.playCard(playerInput);
+        Card botCard = botPlayer.playCard(); //TODO element block for bot
         
         battleResult = Battle.battle(playerCard, botCard);
         postBattleEffects = Battle.getPostBattleEffects();

@@ -14,7 +14,7 @@ public class PlayerBot extends Player {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
        
     public Card playCard() {
-        int choice = random.nextInt(4);
+        int choice = random.nextInt(5);
         return super.playCard(choice);
     }
 
@@ -35,7 +35,7 @@ public class PlayerBot extends Player {
             
         }
 
-        choice = random.nextInt(availableCards.size()-1);
+        choice = random.nextInt(availableCards.size()); // TODO: check if this is correct
 
         return super.playCard(choice);
     }

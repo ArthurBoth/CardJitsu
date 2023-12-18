@@ -14,7 +14,6 @@ public class Battle {
     private static Card player1Card;
     private static Card player2Card;
     private static int lastBattleWinnerID;
-    // TODO implement element block here instead of in GameSystem
 
     private Battle() {
         throw new IllegalStateException("Utility class");
@@ -93,7 +92,7 @@ public class Battle {
     }
 
     private static int elementBattle() {
-         return player1Card.element.elementBattle(player2Card.element);
+         return player1Card.element.battle(player2Card.element);
     }
 
     private static int tieBreaker() {
